@@ -39,6 +39,20 @@ Full documentation for Riot's RESTful API is [here](https://developer.riotgames.
 
 Library code is distributed under the [WTFPL](http://www.wtfpl.net/). You are free to modify and redistribute. Attribution is a nice touch, and I'd love to hear what you get up to with this library.
 
+At last update this supported API versions:
+ * champion-1.2
+ * game-1.3
+ * league-2.5
+ * lol-static-data-1.2
+ * stats-1.3
+ * summoner-1.4
+ * team-2.4
+ * match-2.2
+ * matchhistory-2.2
+
+Not supported yet:
+ * lol-status-1.0
+
 ###General Usage
 
 The Riot Developer API does not support anonymous access. You must [register for an API key](https://developer.riotgames.com/) with Riot before using this API.
@@ -54,6 +68,7 @@ Returns a list of all champions. Optionally only return free to play champions.
     champs = lol.get_champions(free_to_play=False)
     for champ in champs:
         print champ["name"]
+        
 
 ###Summoner-Specific Methods
 
@@ -169,6 +184,28 @@ Get team information for a specific summoner. Can return multiple teams.
     print total_wins
 
 
+###Matches
+
+####get_match ([API Doc](https://developer.riotgames.com/api/methods#!/856/2992))
+
+Returns the match details for a specific `match_id`. Optional parameter `include_timeline` to return game timeline.
+
+```
+match = lol.get_match(12345678, include_timeline=True)
+```
+
+####get_summoner_match_history ([API Doc](https://developer.riotgames.com/api/methods#!/855/2991))
+
+Returns the match history for a specific `summoner_id`. Optional parameters passed straight through to API: `championIds`, `rankedQueues`, `beginIndex`, `endIndex`.
+
+```
+matches = lol.get_summoner_match_history(12345678)
+matches = lol.get_summoner_match_history(12345678, championIds=1, rankedQueues='RANKED_SOLO_5x5')
+
+```
+
+###Convenience
+
 ####set_summoner
 
 Convenience function to set summoner ID from name. Summoner-specific functions can be called without an ID argument if this has been set.
@@ -190,6 +227,8 @@ Takes a region as argument and executes all further API calls against that regio
 Valid regions: `euw, eune, na, tr, br`.
 
 Note: not all API functions support all regions. Check Riot documentation if you run into weird errors. At time of writing, `na, euw, eune` regions are valid for all calls.
+
+Static data calls run against a `global` domain with a slightly different API URL format.
 
 ####set_api_version
 
